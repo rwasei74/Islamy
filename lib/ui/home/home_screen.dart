@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Stack(
       children: [
         Image.asset(
@@ -40,24 +41,27 @@ class _HomeScreenState extends State<HomeScreen> {
           width: double.infinity,
           height: double.infinity,
         ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          bottomNavigationBar: CustomBottomNavBar(
-            selectedIndex: selectedIndex,
-            onTap: (index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Image.asset('assets/images/Logo.png'),
-              Expanded(
-                child: TabsList[selectedIndex],
-              ),
-            ],
+        SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            bottomNavigationBar: CustomBottomNavBar(
+              selectedIndex: selectedIndex,
+              onTap: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+            ),
+            body: Column(
+              spacing: height*0.02,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Image.asset('assets/images/Logo.png'),
+                Expanded(
+                  child: TabsList[selectedIndex],
+                ),
+              ],
+            ),
           ),
         )
       ],
