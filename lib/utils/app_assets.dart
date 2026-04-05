@@ -17,4 +17,9 @@ class AppAssets {
   static const String left='assets/images/img_left_corner.png';
   static const String right='assets/images/img_right_corner.png';
   static const String mosco='assets/images/img_bottom_decoration.png';
+  static const String hadethbg='assets/images/HadithCardBackGround 1.png';
+
+  static const String hadethleft='assets/images/left_corner.png';
+  static const String hadethright='assets/images/right_corner.png';
+  static const String hadethbottom='assets/images/Mosque-02 2.png';
 }
