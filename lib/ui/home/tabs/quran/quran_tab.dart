@@ -8,8 +8,15 @@ import 'package:islamy_app/utils/app_colors.dart';
 import 'package:islamy_app/utils/app_routes.dart';
 import 'package:islamy_app/utils/app_style.dart';
 
-class QuranTab extends StatelessWidget {
-  const QuranTab({super.key});
+class QuranTab extends StatefulWidget {
+   QuranTab({super.key});
+
+  @override
+  State<QuranTab> createState() => _QuranTabState();
+}
+
+class _QuranTabState extends State<QuranTab> {
+   List<int> filterlist = List.generate(114, (index) => index );
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +28,7 @@ class QuranTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
-            style: const TextStyle(color: AppColors.whiteColor),
+            style:  TextStyle(color: AppColors.whiteColor),
             cursorColor: AppColors.primaryColor,
             decoration: InputDecoration(
               enabledBorder: buildOutlineInputBorder(),
@@ -33,25 +40,31 @@ class QuranTab extends StatelessWidget {
               hintText: 'Sura Name',
               hintStyle: AppStyle.bold16white,
             ),
+            onChanged: (text){
+              searcBySuraName(text);
+            },
           ),
           SizedBox(height: height * 0.015),
           const MostRecentWidget(),
           SizedBox(height: height * 0.015),
           Text('Sura List', style: AppStyle.bold16white),
           SizedBox(height: height * 0.015),
-          Expanded(
-            child: ListView.separated(
+          Expanded(child: filterlist.isEmpty?
+    Center(child:Text('No Sura Item Found',
+          style: AppStyle.bold20primary,))
+    :
+             ListView.separated(
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed(
                       AppRoutes.SuraDetails2Name,
-                      arguments: index,
+                      arguments: filterlist[index],
                     );
                   },
                   child: SuraItemWidget(
-                    index: index,
+                    index: filterlist[index],
                   ),
                 );
               },
@@ -64,7 +77,7 @@ class QuranTab extends StatelessWidget {
                   endIndent: width * 0.1,
                 ),
               ),
-              itemCount: QuranResorces.arabicAuranSuraslist.length,
+              itemCount: filterlist.length,
             ),
           ),
         ],
@@ -77,5 +90,23 @@ class QuranTab extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
     );
+  }
+
+  void searcBySuraName(String text){
+    List<int> searchResultList=[];
+    for(int i=0;i<QuranResorces.arabicAuranSuraslist.length;i++){
+      //todo: tolowercase() => Saba => Saba, SABA => Saba
+      //todo: toUpperCase() => Saba => SABA, sABA => SABA
+      if(QuranResorces.englishQuranSurahslist[i].toLowerCase().contains(text.toLowerCase())){
+        searchResultList.add(i);
+      }
+    if(QuranResorces.arabicAuranSuraslist[i].contains(text)){
+      searchResultList.add(i);
+    }
+    }
+    filterlist=searchResultList;
+    setState(() {
+    });
+
   }
 }
