@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:islamy_app/model/quran_resorces.dart';
 import 'package:islamy_app/utils/app_assets.dart';
 import 'package:islamy_app/utils/app_colors.dart';
 import 'package:islamy_app/utils/app_style.dart';
-class MostRecentWidget extends StatelessWidget {
-  const MostRecentWidget({super.key});
+import 'package:islamy_app/utils/shared_prefs_utils.dart';
+class MostRecentWidget extends StatefulWidget {
+   MostRecentWidget({super.key});
+
+  @override
+  State<MostRecentWidget> createState() => _MostRecentWidgetState();
+}
+
+class _MostRecentWidgetState extends State<MostRecentWidget> {
+   List<int> mostrecentlist=[];
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    readMostRecentList();
+  }
+  void readMostRecentList()async{
+     mostrecentlist=await getMostRecentList();
+     setState(() {
+     });
+  }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    return
+    return Visibility(
+        visible: mostrecentlist.isNotEmpty
+        ,child:
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: height*0.02,
@@ -40,14 +62,15 @@ class MostRecentWidget extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
     Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
-    Text('Al-Anbiya',
+    Text(QuranResorces.englishQuranSurahslist[mostrecentlist[index]] ,
     style: AppStyle.bold24black,
     ),
-    Text('الأنبياء' ,
+    Text(QuranResorces.arabicAuranSuraslist[mostrecentlist[index]] ,
     style: AppStyle.bold24black),
-    Text('112 Verses ',
+    Text('${QuranResorces.versesNumberlist[mostrecentlist[index]]} Verses ',
     style: AppStyle.bold14black,
     ),
     ],
@@ -64,11 +87,12 @@ class MostRecentWidget extends StatelessWidget {
     //spacing between cards
     return SizedBox(width: width*0.04,);
     },
-    itemCount: 10 ,
+    itemCount: mostrecentlist.length,
     ),
     )
         ],
-      ) ;
+      )
+    );
 
   }
 }
