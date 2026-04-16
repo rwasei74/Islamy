@@ -7,10 +7,16 @@ import 'package:islamy_app/utils/app_assets.dart';
 import 'package:islamy_app/utils/app_colors.dart';
 import 'package:islamy_app/utils/app_routes.dart';
 import 'package:islamy_app/utils/app_style.dart';
+import 'package:islamy_app/utils/shared_prefs_utils.dart';
 
-class QuranTab extends StatelessWidget {
+class QuranTab extends StatefulWidget {
   const QuranTab({super.key});
 
+  @override
+  State<QuranTab> createState() => _QuranTabState();
+}
+
+class _QuranTabState extends State<QuranTab> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -19,6 +25,7 @@ class QuranTab extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: width * 0.04),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: height * 0.02,
         children: [
           TextField(
             style: const TextStyle(color: AppColors.whiteColor),
@@ -34,35 +41,34 @@ class QuranTab extends StatelessWidget {
               hintStyle: AppStyle.bold16white,
             ),
           ),
-          SizedBox(height: height * 0.015),
-          const MostRecentWidget(),
-          SizedBox(height: height * 0.015),
+          MostRecentWidget(key: UniqueKey()),
           Text('Sura List', style: AppStyle.bold16white),
-          SizedBox(height: height * 0.015),
           Expanded(
             child: ListView.separated(
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(
+                  onTap: () async {
+                    saveSuraIndex(index);
+
+                    await Navigator.of(context).pushNamed(
                       AppRoutes.SuraDetails2Name,
                       arguments: index,
                     );
+                    if (mounted) {
+                      setState(() {});
+                    }
                   },
                   child: SuraItemWidget(
                     index: index,
                   ),
                 );
               },
-              separatorBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.all(3),
-                child: Divider(
-                  color: AppColors.whiteColor,
-                  thickness: 1,
-                  indent: width * 0.1,
-                  endIndent: width * 0.1,
-                ),
+              separatorBuilder: (context, index) => Divider(
+                color: AppColors.whiteColor,
+                thickness: 1,
+                indent: width * 0.1,
+                endIndent: width * 0.1,
               ),
               itemCount: QuranResorces.arabicAuranSuraslist.length,
             ),
